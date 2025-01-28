@@ -27,8 +27,8 @@ import (
 // @termsOfService  http://swagger.io/terms/
 
 // @contact.name   John Carlo Asilo
-// @contact.url    http://www.swagger.io/support
-// @contact.email  support@swagger.io
+// @contact.url    http://jcarlo.vercel.app
+// @contact.email  jcarloasilo@gmail.com
 
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
@@ -37,7 +37,10 @@ import (
 // @BasePath  /
 // @schemes   ${SCHEMES}
 
-// @securityDefinitions.basic  BasicAuth
+// @securityDefinitions.apikey  BearerAuth
+// @in                          header
+// @name                        Authorization
+// @description                 Type "Bearer" followed by a space and the token.
 
 // @externalDocs.description  OpenAPI
 // @externalDocs.url          https://swagger.io/resources/open-api/
