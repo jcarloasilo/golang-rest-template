@@ -32,12 +32,23 @@ func (app *application) routes() http.Handler {
 
 	mux.Post("/login", app.handlerLogin)
 
-	mux.Post("/users", app.handlerCreateUser)
-	mux.Get("/users/me", app.handlerGetCurrentUser)
+	mux.Post("/register", app.handlerCreateUser)
 
 	mux.Group(func(mux chi.Router) {
 		mux.Use(app.requireAuthenticatedUser)
+
 		mux.Get("/protected", app.protected)
+
+		mux.Get("/users/me", app.handlerGetCurrentUser)
+
+		mux.Post("/email-confirmation", app.handlerEmailConfirmation)
+		mux.Post("/email-confirmation/request", app.handlerNewEmailConfirmation)
+	})
+
+	mux.Group(func(mux chi.Router) {
+		mux.Use(app.requireVerifiedUser)
+
+		mux.Get("/verified-protected", app.verified)
 	})
 
 	mux.Group(func(mux chi.Router) {

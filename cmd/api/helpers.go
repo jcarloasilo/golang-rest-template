@@ -1,7 +1,9 @@
 package main
 
 import (
+	"crypto/rand"
 	"fmt"
+	"math/big"
 	"net/http"
 )
 
@@ -31,4 +33,20 @@ func (app *application) backgroundTask(r *http.Request, fn func() error) {
 			app.reportServerError(r, err)
 		}
 	}()
+}
+
+func (app *application) generateOTP(length int) (string, error) {
+	const charSet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	charSetLen := len(charSet)
+	otp := make([]byte, length)
+
+	for i := 0; i < length; i++ {
+		randomIndex, err := rand.Int(rand.Reader, big.NewInt(int64(charSetLen)))
+		if err != nil {
+			return "", err // Return error if random number generation fails
+		}
+		otp[i] = charSet[randomIndex.Int64()]
+	}
+
+	return string(otp), nil
 }

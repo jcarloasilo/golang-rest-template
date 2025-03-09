@@ -30,7 +30,7 @@ func (app *application) reportServerError(r *http.Request, err error) {
 func (app *application) errorMessage(w http.ResponseWriter, r *http.Request, status int, message string, headers http.Header) {
 	message = strings.ToUpper(message[:1]) + message[1:]
 
-	err := response.JSONWithHeaders(w, status, map[string]string{"Error": message}, headers)
+	err := response.JSONWithHeaders(w, status, map[string]string{"error": message}, headers)
 	if err != nil {
 		app.reportServerError(r, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -74,6 +74,11 @@ func (app *application) invalidAuthenticationToken(w http.ResponseWriter, r *htt
 
 func (app *application) authenticationRequired(w http.ResponseWriter, r *http.Request) {
 	app.errorMessage(w, r, http.StatusUnauthorized, "You must be authenticated to access this resource", nil)
+}
+
+func (app *application) unverifiedUser(w http.ResponseWriter, r *http.Request) {
+	message := "Account not verified. Please verify your email address before proceeding."
+	app.errorMessage(w, r, http.StatusForbidden, message, nil)
 }
 
 func (app *application) basicAuthenticationRequired(w http.ResponseWriter, r *http.Request) {

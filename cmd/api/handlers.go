@@ -20,3 +20,7 @@ func (app *application) status(w http.ResponseWriter, r *http.Request) {
 func (app *application) protected(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("This is a protected handler"))
 }
+
+func (app *application) verified(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("This is a verified handler"))
+}

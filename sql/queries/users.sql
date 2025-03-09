@@ -8,4 +8,9 @@ SELECT * FROM users WHERE email = $1;
 SELECT * FROM users WHERE id = $1;
 
 -- name: CreateUser :one
-INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *;
+INSERT INTO users (email, name, hashed_password) VALUES ($1, $2, $3) RETURNING *;
+
+-- name: VerifyUser :exec
+UPDATE users
+SET verified_at = sqlc.arg(verified_at)::TIMESTAMPTZ
+WHERE id = sqlc.arg(user_id)::UUID;

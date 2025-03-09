@@ -1,0 +1,39 @@
+{{define "subject"}}Email Confirmation OTP{{ end }}
+
+{{define "plainBody"}}
+Hi {{.Name}}, To confirm your email address, please use the following One-Time
+Password (OTP):
+
+{{.Code}}
+
+This OTP is valid for a limited time. If you did not request this email
+confirmation, please ignore this message. Thank you.
+{{ end }}
+
+{{define "htmlBody"}}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </head>
+  <body>
+    <p>Hi {{.Name}},</p>
+       
+    <p>
+      To confirm your email address, please use the following
+      <strong>One-Time Password (OTP)</strong>:
+    </p>
+       
+    <h2>{{.Code}}</h2>
+       
+    <p>This OTP is valid for a limited time.</p>
+    <p>
+      If you did not request this email confirmation, please ignore this
+      message.
+    </p>
+       
+    <p>Thank you.</p>
+  </body>
+</html>
+{{ end }}

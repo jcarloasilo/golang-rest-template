@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/jcarloasilo/golang-rest-template/internal/database"
 	"github.com/jcarloasilo/golang-rest-template/internal/password"
@@ -16,6 +17,7 @@ import (
 func (app *application) handlerCreateUser(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		Email     string              `json:"email"`
+		Name      string              `json:"name"`
 		Password  string              `json:"password"`
 		Validator validator.Validator `json:"-"`
 	}
@@ -53,15 +55,54 @@ func (app *application) handlerCreateUser(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	_, err = app.db.CreateUser(r.Context(), database.CreateUserParams{
-		Email:    input.Email,
-		Password: hashedPassword,
+	user, err := app.db.CreateUser(r.Context(), database.CreateUserParams{
+		Email:          input.Email,
+		Name:           input.Name,
+		HashedPassword: hashedPassword,
 	})
 
 	if err != nil {
 		app.serverError(w, r, err)
 		return
 	}
+
+	otp, err := app.generateOTP(6)
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+
+	now := time.Now()
+
+	err = app.db.CreateOTP(r.Context(), database.CreateOTPParams{
+		Code:      otp,
+		Type:      database.OtpTypeEmailVerification,
+		UserID:    user.ID,
+		CreatedAt: now,
+		ExpiresAt: now.Add(time.Minute * 5),
+	})
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+
+	app.backgroundTask(r, func() error {
+		type EmailData struct {
+			Name string
+			Code string
+		}
+
+		err = app.mailer.Send(user.Email, EmailData{
+			Name: user.Name,
+			Code: otp,
+		}, "email_confirmation.tmpl")
+
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
 
 	w.WriteHeader(http.StatusNoContent)
 }

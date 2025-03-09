@@ -39,7 +39,7 @@ func (app *application) handlerLogin(w http.ResponseWriter, r *http.Request) {
 
 	input.Validator.CheckField(input.Email != "", "email", "Email is required")
 
-	passwordMatches, err := password.Matches(input.Password, user.Password)
+	passwordMatches, err := password.Matches(input.Password, user.HashedPassword)
 	if err != nil {
 		app.serverError(w, r, err)
 		return

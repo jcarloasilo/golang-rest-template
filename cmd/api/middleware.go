@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jcarloasilo/golang-rest-template/internal/response"
-
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
+	"github.com/jcarloasilo/golang-rest-template/internal/response"
 	"github.com/pascaldekloe/jwt"
 	"github.com/tomasen/realip"
 	"golang.org/x/crypto/bcrypt"
@@ -43,7 +43,7 @@ func (app *application) logAccess(next http.Handler) http.Handler {
 
 		userAttrs := slog.Group("user", "ip", ip)
 		requestAttrs := slog.Group("request", "method", method, "url", url, "proto", proto)
-		responseAttrs := slog.Group("repsonse", "status", mw.StatusCode, "size", mw.BytesCount)
+		responseAttrs := slog.Group("response", "status", mw.StatusCode, "size", mw.BytesCount)
 
 		app.logger.Info("access", userAttrs, requestAttrs, responseAttrs)
 	})
@@ -90,11 +90,15 @@ func (app *application) authenticate(next http.Handler) http.Handler {
 
 				user, err := app.db.GetUser(r.Context(), userID)
 				if err != nil {
-					app.serverError(w, r, err)
-					return
+					if errors.Is(err, pgx.ErrNoRows) {
+						r = contextSetAuthenticatedUser(r, nil)
+					} else {
+						app.serverError(w, r, err)
+						return
+					}
+				} else {
+					r = contextSetAuthenticatedUser(r, &user)
 				}
-
-				r = contextSetAuthenticatedUser(r, &user)
 			}
 		}
 
@@ -108,6 +112,24 @@ func (app *application) requireAuthenticatedUser(next http.Handler) http.Handler
 
 		if authenticatedUser == nil {
 			app.authenticationRequired(w, r)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
+func (app *application) requireVerifiedUser(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		authenticatedUser := contextGetAuthenticatedUser(r)
+
+		if authenticatedUser == nil {
+			app.authenticationRequired(w, r)
+			return
+		}
+
+		if authenticatedUser.VerifiedAt == nil {
+			app.unverifiedUser(w, r)
 			return
 		}
 
