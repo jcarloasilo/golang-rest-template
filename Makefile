@@ -127,10 +127,3 @@ migrations/status:
 .PHONY: sqlc/generate
 sqlc/generate:
 	sqlc generate
-
-## swag/build: generate swagger documentation
-.PHONY: swag/generate
-swag/generate:
-	@echo "Generating Swagger documentation..."
-	@cd ./cmd/api && swag init --parseDependency --parseInternal || { echo "Swagger generation failed"; exit 1; }
-	@echo "Swagger documentation generated successfully."

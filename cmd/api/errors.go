@@ -7,8 +7,8 @@ import (
 	"runtime/debug"
 	"strings"
 
-	"go-sveltekit/internal/response"
-	"go-sveltekit/internal/validator"
+	"github.com/jcarloasilo/golang-rest-template/internal/response"
+	"github.com/jcarloasilo/golang-rest-template/internal/validator"
 )
 
 type ErrorMessage struct {

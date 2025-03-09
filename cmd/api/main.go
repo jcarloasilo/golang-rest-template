@@ -9,11 +9,10 @@ import (
 	"runtime/debug"
 	"sync"
 
-	_ "go-sveltekit/cmd/api/docs"
-	"go-sveltekit/internal/database"
-	"go-sveltekit/internal/env"
-	"go-sveltekit/internal/smtp"
-	"go-sveltekit/internal/version"
+	"github.com/jcarloasilo/golang-rest-template/internal/database"
+	"github.com/jcarloasilo/golang-rest-template/internal/env"
+	"github.com/jcarloasilo/golang-rest-template/internal/smtp"
+	"github.com/jcarloasilo/golang-rest-template/internal/version"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/lmittmann/tint"
@@ -21,29 +20,6 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
-// @title           API Title
-// @version         1.0
-// @description     This API is going to provide all infos for the API
-// @termsOfService  http://swagger.io/terms/
-
-// @contact.name   John Carlo Asilo
-// @contact.url    http://jcarlo.vercel.app
-// @contact.email  jcarloasilo@gmail.com
-
-// @license.name  Apache 2.0
-// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
-
-// @host      ${HOST}
-// @BasePath  /
-// @schemes   ${SCHEMES}
-
-// @securityDefinitions.apikey  BearerAuth
-// @in                          header
-// @name                        Authorization
-// @description                 Type "Bearer" followed by a space and the token.
-
-// @externalDocs.description  OpenAPI
-// @externalDocs.url          https://swagger.io/resources/open-api/
 func main() {
 	logger := slog.New(tint.NewHandler(os.Stdout, &tint.Options{Level: slog.LevelDebug}))
 
@@ -83,10 +59,6 @@ type config struct {
 		password string
 		from     string
 	}
-	swagger struct {
-		scheme string
-		host   string
-	}
 }
 
 type application struct {
@@ -121,9 +93,6 @@ func run(logger *slog.Logger) error {
 	cfg.smtp.username = env.GetString("SMTP_USERNAME", "example_username")
 	cfg.smtp.password = env.GetString("SMTP_PASSWORD", "pa55word")
 	cfg.smtp.from = env.GetString("SMTP_FROM", "Example Name <no_reply@example.org>")
-
-	cfg.swagger.scheme = env.GetString("SWAGGER_SCHEME", "http")
-	cfg.swagger.host = env.GetString("SWAGGER_HOST", "localhost:8080")
 
 	showVersion := flag.Bool("version", false, "display version and exit")
 

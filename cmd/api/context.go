@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"go-sveltekit/internal/database"
+	"github.com/jcarloasilo/golang-rest-template/internal/database"
 )
 
 type contextKey string

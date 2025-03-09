@@ -2,12 +2,13 @@ package main
 
 import (
 	"errors"
-	"go-sveltekit/internal/database"
-	"go-sveltekit/internal/password"
-	"go-sveltekit/internal/request"
-	"go-sveltekit/internal/response"
-	"go-sveltekit/internal/validator"
 	"net/http"
+
+	"github.com/jcarloasilo/golang-rest-template/internal/database"
+	"github.com/jcarloasilo/golang-rest-template/internal/password"
+	"github.com/jcarloasilo/golang-rest-template/internal/request"
+	"github.com/jcarloasilo/golang-rest-template/internal/response"
+	"github.com/jcarloasilo/golang-rest-template/internal/validator"
 
 	"github.com/jackc/pgx/v5"
 )

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"go-sveltekit/internal/response"
+	"github.com/jcarloasilo/golang-rest-template/internal/response"
 
 	"github.com/google/uuid"
 	"github.com/pascaldekloe/jwt"

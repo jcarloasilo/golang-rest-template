@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"go-sveltekit/internal/response"
+	"github.com/jcarloasilo/golang-rest-template/internal/response"
 )
 
 func (app *application) status(w http.ResponseWriter, r *http.Request) {

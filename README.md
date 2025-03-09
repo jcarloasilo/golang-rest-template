@@ -39,9 +39,6 @@ SMTP_PORT=25
 SMTP_USERNAME=example_username
 SMTP_PASSWORD=pa55word
 SMTP_FROM=Example Name <no_reply@example.org>
-
-SWAGGER_HOST="localhost:8080"
-SWAGGER_SCHEME="http"
 ```
 
 Make sure that you're in the root of the project directory, fetch the dependencies with `go mod tidy`, then run the application using `go run ./cmd/api`:
@@ -815,4 +812,4 @@ func Get() string {
 
 ## Changing the module path
 
-The module path is currently set to `go-sveltekit`. If you want to change this please find and replace all instances of `go-sveltekit` in the codebase with your own module path.
+The module path is currently set to `github.com/jcarloasilo/golang-rest-template`. If you want to change this please find and replace all instances of `github.com/jcarloasilo/golang-rest-template` in the codebase with your own module path.

@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"time"
 
-	"go-sveltekit/assets"
-	"go-sveltekit/internal/funcs"
+	"github.com/jcarloasilo/golang-rest-template/assets"
+	"github.com/jcarloasilo/golang-rest-template/internal/funcs"
 
 	"github.com/wneessen/go-mail"
 
